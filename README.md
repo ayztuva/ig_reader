@@ -1,2 +1,2 @@
-# ig_reader
-Scrapes instagram -- can get all the user's photos and check for new stories
+# ReadIG
+Gets all media from instagram profiles.
