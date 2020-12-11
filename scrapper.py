@@ -1,4 +1,5 @@
 import re
+import os
 import json
 
 import requests
@@ -9,7 +10,7 @@ JSON_URL = 'https://www.instagram.com/graphql/query/'
 
 JS_PATTERN = r'static/bundles/es6/Consumer.js/\w*.js'
 QUERY_HASH_PATTERN = r'profilePosts\.byUserId\.get[^,]+,queryId:"\w+"'
-INTERNAL_DATA_PATTERN = r'window._sharedData\s=\s[^;]+'
+INTERNAL_DATA_PATTERN = r'window._sharedData\s=\s.+?;</script>'
 
 
 def get_html(url, driver):
@@ -135,47 +136,49 @@ def main():
     """
     Main function
     """
-    media = []
-
-    # Open browser
     options = webdriver.FirefoxOptions()
     options.add_argument('--headless')
     driver = webdriver.Firefox(options=options)
 
-    # Get html
-    with open('profile.txt') as f:
-        url = f.readline()
-        html = get_html(url, driver)
+    with open('profiles.txt') as file:
+        for url in file:
+            media = []
+            html = get_html(url, driver)
+            username = url.rstrip('/\n').split('/')[-1]
 
-    # Get data from HTML
-    match = re.search(INTERNAL_DATA_PATTERN, html)
-    container = json.loads(match.group().lstrip('window._sharedData= '))
-    data = get_data_from_html(container)
-    
-    media.extend(data['media'])
+            print(f'Scrapping media from {username}')
 
-    # Get data from AJAX
-    profile_id = data['profile_id']
-    query_hash = get_query_hash(html)
-    while data['has_next_page']:
-        variables = {
-            'id': profile_id,
-            'first': 12,
-            'after': data['end_cursor']
-        }
-        params = {
-            'query_hash': query_hash,
-            'variables': json.dumps(variables)
-        }
-        response = requests.get(JSON_URL, params=params)
-        container = json.loads(response.text)
-        data = get_data_from_ajax(container)
-        media.extend(data['media'])
+            # Get data from HTML
+            match = re.search(INTERNAL_DATA_PATTERN, html).group()
+            match = match.lstrip('window._sharedData= ').rstrip(';</script>')
+            container = json.loads(match)
+            data = get_data_from_html(container)
+            
+            media.extend(data['media'])
 
-    with open('urls.txt', 'w') as f:
-        for url in media:
-            f.write(url+'\n')
+            # Get data from AJAX
+            profile_id = data['profile_id']
+            query_hash = get_query_hash(html)
+            while data['has_next_page']:
+                variables = {
+                    'id': profile_id,
+                    'first': 12,
+                    'after': data['end_cursor']
+                }
+                params = {
+                    'query_hash': query_hash,
+                    'variables': json.dumps(variables)
+                }
+                response = requests.get(JSON_URL, params=params)
+                container = response.json()
+                data = get_data_from_ajax(container)
+                media.extend(data['media'])
 
+            with open(f'profiles/{username}.txt', 'w') as f:
+                for url in media:
+                    f.write(url+'\n')
+
+    print('Done.')
     driver.quit()
 
 
