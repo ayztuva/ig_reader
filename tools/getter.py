@@ -60,6 +60,7 @@ def data_from_html(html):
         'media': media
     }
 
+
 def data_from_ajax(dict_data):
     """
     TODO
@@ -101,6 +102,7 @@ def data_from_ajax(dict_data):
         'media': media
     }
 
+
 def query_hash(html):
     """
     TODO
@@ -114,5 +116,4 @@ def query_hash(html):
     except AttributeError:
         # LOGGING TODO
         pass
-
     return qhash

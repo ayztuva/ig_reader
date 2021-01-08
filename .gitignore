@@ -1,10 +1,10 @@
 .git/*
-env/
 venv/
+env/
+.env
 .venv
 .venv/
 .vscode/
-profiles/*/
 
 __pycache__/
 *.py[cod]
@@ -19,6 +19,7 @@ profiles.txt
 *.sublime-project
 *.sublime-workspace
 *.log
+*.zip
 
 
 db.sqlite3
