@@ -8,7 +8,7 @@ import requests
 from selenium import webdriver
 
 from tools.getter import data_from_ajax, data_from_html, query_hash
-from tools.proxy import get_proxies, change_proxy
+from tools.proxy import Proxy
 
 JSON_URL = ('https://www.instagram.com/graphql/query/' +
             '?query_hash={}&variables={}')
