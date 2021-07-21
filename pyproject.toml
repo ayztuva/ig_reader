@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "instabot"
+version = "0.1.0"
+description = ""
+authors = ["Evan <evan.vilagov@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+beautifulsoup4 = "^4.9.3"
+lxml = "^4.6.3"
+python-dotenv = "^0.18.0"
+requests = "^2.26.0"
+selenium = "^3.141.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
