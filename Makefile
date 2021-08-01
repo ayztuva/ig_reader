@@ -1,5 +1,2 @@
 start:
-	@ python3 scrapper.py
-
-proxy:
-	@ python3 tools/proxy.py
+	poetry run python bot.py

@@ -20,6 +20,3 @@ profiles.txt
 *.sublime-workspace
 *.log
 *.zip
-
-
-db.sqlite3
